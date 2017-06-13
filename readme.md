@@ -196,6 +196,24 @@ export class UserFormComponent {
 
 As you can see, the `formModel` and `formData` are objects that you maybe could retrieve from your API or has in a separated file on you Angular module. The `messages` object represents the validation or other messages state from API. The `FormModelParserService` makes transformations on the given form model object and parses it to a FormGroup instance, taking care of the given validation rules, currently the default Angular validations are available.
 
+## Supported Controls
+
+The current supported controls are (mainly of them native controls):
+
+- text
+- password
+- textarea
+- number
+- date
+- datetime-local (uses `eonasdan-bootstrap-datetimepicker` `jquery` plugin)
+- month
+- week
+- time
+- checkbox-array
+- radio
+- select (single and multiple by `ng2-select`)
+- check (for boolean stuff, has a small css customization)
+
 ## Tests
 
 This modules has a few tests (more tests are on progress):
