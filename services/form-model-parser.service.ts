@@ -32,7 +32,7 @@ export class FormModelParserService {
    * @param langNamespace The translations fields namespace
    */
   public parse(model: Object, langNamespace: string = ''): Object {
-    let parsedModel = {};
+    const parsedModel = {};
     let option: { id: string | number, text: string };
     let options: { id: string | number, text: string }[] = [];
 
@@ -41,7 +41,7 @@ export class FormModelParserService {
       // don't parse the form model options
       if (controlName == this.optionsKey) return false;
 
-      let field: ControlConfig = Object.assign({}, controlOptions);
+      const field: ControlConfig = Object.assign({}, controlOptions);
 
       // get control labe translation
       this.translate.get(langNamespace + controlName)
@@ -52,7 +52,7 @@ export class FormModelParserService {
         options = [];
         _.forEach(controlOptions.options, (optionValue: string) => {
           option = { id: '', text: '' };
-          let transKey: string = langNamespace + controlName + '-options.' + optionValue;
+          const transKey: string = langNamespace + controlName + '-options.' + optionValue;
           option.id = optionValue;
 
           // get option translation
@@ -68,18 +68,18 @@ export class FormModelParserService {
       parsedModel[controlName] = field;
 
       // the control validation rules
-      let validationRules: string[] = _.get(controlOptions, 'validation', []);
+      const validationRules: string[] = _.get(controlOptions, 'validation', []);
 
       // the field requires confirmation?
       if (_.includes(validationRules, 'confirmed')) {
         // get filed validation rules without the confirmed rule
-        let cleanedValidationRules = _.filter(controlOptions['validation'], (rule) => {
+        const cleanedValidationRules = _.filter(controlOptions['validation'], (rule) => {
           return rule != 'confirmed';
         });
 
         // create new confirmation field config based on the current field options
-        let confirmFieldOptions = { [controlName + '_confirmation']: Object.assign({}, controlOptions, { validation: cleanedValidationRules }) };
-        let confirmFieldParsed = this.parse(
+        const confirmFieldOptions = { [controlName + '_confirmation']: Object.assign({}, controlOptions, { validation: cleanedValidationRules }) };
+        const confirmFieldParsed = this.parse(
           confirmFieldOptions,
           langNamespace
         );
@@ -92,7 +92,7 @@ export class FormModelParserService {
   }
 
   public parseToSearch(model: Object, allColumns: Object, translateKey: string) {
-    let searchGroup: Group = {
+    const searchGroup: Group = {
       controls: {},
       type: 'group',
       visibility: {
@@ -102,7 +102,7 @@ export class FormModelParserService {
         label: 'Search'
       }
     };
-    let optionsGroup: Group = {
+    const optionsGroup: Group = {
       controls: {},
       type: 'group',
       visibility: {
@@ -112,10 +112,10 @@ export class FormModelParserService {
         label: 'Visible Columns'
       }
     };
-    let parsedModel: Object = {};
-    let columnOptions = [];
+    const parsedModel: Object = {};
+    const columnOptions = [];
     // the object is sealed/frozen, then we make a deep clone to have a unlock one
-    let copyModel: Object = _.cloneDeep(model);
+    const copyModel: Object = _.cloneDeep(model);
 
     // loop over model fields and search which of them can be transformed to groups like:
     // created_at: {} => created_at: [from: {}, to: {}]
@@ -125,7 +125,7 @@ export class FormModelParserService {
       if (field == this.optionsKey) return false;
 
       // remove the required validation rules if any
-      let fieldOptions = this.removeRequiredValidationRule(options);
+      const fieldOptions = this.removeRequiredValidationRule(options);
       let groupOptions = {};
       let groupFields = {};
 
@@ -161,7 +161,7 @@ export class FormModelParserService {
     // setup for trashed columns if deleted_at field exists
     if (_.has(model, 'deleted_at')) {
 
-      let trashedOptions = [
+      const trashedOptions = [
         { id: 'withTrashed', text: 'Con registros eliminados' },
         { id: 'onlyTrashed', text: 'Sólo registros eliminados' },
       ];
@@ -183,7 +183,7 @@ export class FormModelParserService {
   }
 
   private getColumnsOptions(columns, translationKey) {
-    let columnOptions = [];
+    const columnOptions = [];
     let trans = {};
     this.translate.get(translationKey + 'fields').subscribe(val => trans = val);
 
@@ -211,9 +211,9 @@ export class FormModelParserService {
   }
 
   private getGroupFields(fieldOptions: any): Object {
-    let fromField = Object.assign({}, fieldOptions);
-    let toField = Object.assign({}, fieldOptions);
-    let group = {};
+    const fromField = Object.assign({}, fieldOptions);
+    const toField = Object.assign({}, fieldOptions);
+    const group = {};
 
     fromField.name = fieldOptions.name + '_from';
     toField.name = fieldOptions.name + '_to';
@@ -234,7 +234,7 @@ export class FormModelParserService {
    * @param parsedModel The parsed Form Model
    */
   public toFormGroup(parsedModel: Object, formType: string = '*'): FormGroup {
-    let group = {};
+    const group = {};
     let validation = [];
 
     _.forOwn(parsedModel, (options: ControlConfig, field) => {
@@ -250,12 +250,12 @@ export class FormModelParserService {
       validation = [];
       if (_.has(options, 'validation')) {
         _.each(options['validation'], (validationRule) => {
-          switch(validationRule) {
-            case "required":
+          switch (validationRule) {
+            case 'required':
               validation.push(Validators.required);
             break;
 
-            case "email":
+            case 'email':
               validation.push(Validators.email);
             break;
           }
@@ -264,16 +264,16 @@ export class FormModelParserService {
 
       // setup the reactiveForm based on the option type
       switch (options.type) {
-        case "group":
+        case 'group':
           group[field] = this.toFormGroup(options.controls);
           break;
 
         // TODO: setup for array groups
-        case "checkbox-array":
+        case 'checkbox-array':
           group[field] = [[], validation];
           break;
-        
-        case "select":
+
+        case 'select':
           if (options.multiple && options.multiple === true) {
             group[field] = [[], validation];
           } else {

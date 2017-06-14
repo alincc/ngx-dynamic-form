@@ -22,7 +22,7 @@ export class DynamicControlDirective implements OnInit, OnChanges {
   public errors: Object = {};
 
   @Input()
-  public disabled: boolean = false;
+  public disabled = false;
 
   private component: ComponentRef<Control>;
 
@@ -37,7 +37,7 @@ export class DynamicControlDirective implements OnInit, OnChanges {
 
   public ngOnInit() {
     const component = Controls[this.config.type];
-    
+
     if (component) {
       const factory = this.resolver.resolveComponentFactory<Control>(component);
       this.component = this.container.createComponent(factory);

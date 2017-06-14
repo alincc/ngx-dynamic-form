@@ -76,7 +76,7 @@ export class CheckboxControlComponent implements Control, OnInit {
     public config: ControlConfig;
     public group: FormGroup;
     public errors: Object = {};
-    public disabled: boolean = true;
+    public disabled = true;
 
     public constructor() { }
 

@@ -56,11 +56,11 @@ export class SelectControlComponent implements Control, OnInit {
   public config: ControlConfig;
   public group: FormGroup;
   public errors: Object = {};
-  public disabled: boolean = true;
+  public disabled = true;
   public data: any = {};
   public items = [{ id: 'null', text: 'No data given...' }];
   public validationClasses: Object;
-  public noDataGiven: boolean = false;
+  public noDataGiven = false;
 
   public constructor() { }
 
@@ -97,12 +97,12 @@ export class SelectControlComponent implements Control, OnInit {
   }
 
   public getValue() {
-    let controlValue = this.group.get(this.config.name).value;
+    const controlValue: any = this.group.get(this.config.name).value;
 
     if (controlValue) {
       return !_.isNumber(controlValue)
         ? this.getItems().filter(value => controlValue.includes(value.id)).map(item => item.id)
-        : this.getItems().filter(value => controlValue == value.id).map(item => item.id);
+        : this.getItems().filter((value:any) => controlValue == value.id).map(item => item.id);
     }
 
     return controlValue;
@@ -111,9 +111,9 @@ export class SelectControlComponent implements Control, OnInit {
   public getItems(): Array<{ id: string, text: string }> {
     // config for dynamic options based on the given form data (this.data)
     if (_.has(this.config, 'dynamicOptions')) {
-      let index: string = _.get(this.config.dynamicOptions, 'data', '');
+      const index: string = _.get(this.config.dynamicOptions, 'data', '');
 
-      let data = _.get(this.data, index, []);
+      const data = _.get(this.data, index, []);
 
       if (data && data.length > 0) {
         // check if the array has well key and text keys, if no, map that values
@@ -138,7 +138,7 @@ export class SelectControlComponent implements Control, OnInit {
 
   public get active() {
     if (_.isArray(this.group.get(this.config.name).value)) {
-      let controlValue = this.group.get(this.config.name).value;
+      const controlValue = this.group.get(this.config.name).value;
 
       return this.getItems().filter(value => controlValue.includes(value.id));
     } else {
@@ -150,7 +150,7 @@ export class SelectControlComponent implements Control, OnInit {
 
   public changed(data: any) {
     if (this.config.multiple) { // set value fom select "multiple"
-      let field = this.config.name;
+      const field = this.config.name;
       this.group.get(field).patchValue(data.map(item => item.id));
     } else { // set value for select "unique"
       this.group.get(this.config.name).setValue(data.id);

@@ -23,7 +23,7 @@ import { GroupConfig } from './../models/group-config';
 })
 export class GroupBasicComponent implements Group, OnInit {
   public config: GroupConfig;
-  public disabled: boolean = false;
+  public disabled = false;
 
   public type;
   public visibility;

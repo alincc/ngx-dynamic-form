@@ -21,7 +21,7 @@ export class DynamicGroupDirective implements OnInit {
   public errors: Object = {};
 
   @Input()
-  public disabled: boolean = false;
+  public disabled = false;
 
   private component: ComponentRef<Group>;
 

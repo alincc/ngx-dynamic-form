@@ -1,14 +1,14 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, fakeAsync, TestBed, inject, getTestBed, tick } from '@angular/core/testing';
-import { RadioControlComponent } from "./radio-control.component";
-import { ReactiveFormsModule, FormBuilder } from "@angular/forms";
-import { ControlConfig } from "app/dynamic-form/models/control-config";
+import { RadioControlComponent } from './radio-control.component';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ControlConfig } from 'app/dynamic-form/models/control-config';
 
 describe('RadioControlComponent', () => {
   let fixture: ComponentFixture<RadioControlComponent>;
   let component: RadioControlComponent;
-  let fb: FormBuilder = new FormBuilder();
-  let config: ControlConfig = {
+  const fb: FormBuilder = new FormBuilder();
+  const config: ControlConfig = {
       type: 'radio',
       id: 'myRadio',
       name: 'myRadio',
@@ -20,7 +20,7 @@ describe('RadioControlComponent', () => {
       ],
     };
 
-    let formGroup = fb.group({
+    const formGroup = fb.group({
       myRadio: ['']
     });
 
@@ -46,13 +46,13 @@ describe('RadioControlComponent', () => {
 
     fixture.detectChanges();
 
-    let html = fixture.nativeElement;
+    const html = fixture.nativeElement;
 
     // radio input should exists with no checked option
     expect(html.querySelectorAll('input[name=myRadio]')[0]).toBeTruthy('radio 1 should exists');
     expect(html.querySelectorAll('input[name=myRadio]')[1]).toBeTruthy('radio 2 should exists');
 
-    // the given sorting should be the same passed on config options 
+    // the given sorting should be the same passed on config options
     expect(html.querySelectorAll('input[name=myRadio]')[0].value).toBe('1', 'first option value');
     expect(html.querySelector('.radio').textContent).toContain('one');
 
@@ -67,7 +67,7 @@ describe('RadioControlComponent', () => {
 
     fixture.detectChanges();
 
-    let html = fixture.nativeElement;
+    const html = fixture.nativeElement;
 
     expect(html.querySelector('input:checked')).toBeTruthy('radio checked exists');
     expect(html.querySelectorAll('input[name=myRadio]')[0].checked).toBe(true, 'radio 1 should be checked');

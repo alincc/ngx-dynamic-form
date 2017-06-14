@@ -20,7 +20,7 @@ import { SERVICES } from './services';
     SelectModule
   ],
   exports: [...CONTAINERS],
-  entryComponents: [...COMPONENTS,],
+  entryComponents: [...COMPONENTS, ],
   providers: [...SERVICES],
 })
 export class DynamicFormModule { }

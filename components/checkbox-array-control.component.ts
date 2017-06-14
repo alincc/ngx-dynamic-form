@@ -44,15 +44,15 @@ export class CheckboxArrayControlComponent implements Control, OnInit {
   public config: ControlConfig;
   public group: FormGroup;
   public errors: Object = {};
-  public disabled: boolean = true;
+  public disabled = true;
 
   public constructor() { }
 
   public ngOnInit() { }
 
   public toggleArrayFieldValue(field: any, value: any) {
-    let index = this.group.get(field).value.indexOf(value);
-    let selectedOptions = _.set({}, field, _.cloneDeep(this.group.get(field).value));
+    const index = this.group.get(field).value.indexOf(value);
+    const selectedOptions = _.set({}, field, _.cloneDeep(this.group.get(field).value));
 
     if (index > -1) {
       selectedOptions[field].splice(index, 1);
