@@ -102,7 +102,7 @@ export class SelectControlComponent implements Control, OnInit {
     if (controlValue) {
       return !_.isNumber(controlValue)
         ? this.getItems().filter(value => controlValue.includes(value.id)).map(item => item.id)
-        : this.getItems().filter((value:any) => controlValue == value.id).map(item => item.id);
+        : this.getItems().filter((value: any) => controlValue == value.id).map(item => item.id);
     }
 
     return controlValue;
