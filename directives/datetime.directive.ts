@@ -1,6 +1,6 @@
 import { AfterViewInit, Directive, ElementRef, EventEmitter, forwardRef, Input, Output, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import * as jQuery from 'jquery';
 import 'eonasdan-bootstrap-datetimepicker';
@@ -22,13 +22,13 @@ const DATE_PICKER_VALUE_ACCESSOR = {
 })
 export class DatetimeDirective implements ControlValueAccessor, OnInit, AfterViewInit {
   @Input()
-  disabled: boolean = false;
+  disabled = false;
 
   @Input()
-  name: string = '';
+  name = '';
 
   @Input()
-  placeholder: string = '';
+  placeholder = '';
 
   @Input()
   classes: any = '';
@@ -36,7 +36,7 @@ export class DatetimeDirective implements ControlValueAccessor, OnInit, AfterVie
   @Output()
   dateChanged = new EventEmitter<string>();
 
-  public value: string = '';
+  public value = '';
 
   public constructor(private input: ElementRef) { }
 
@@ -47,7 +47,7 @@ export class DatetimeDirective implements ControlValueAccessor, OnInit, AfterVie
   public ngAfterViewInit() {
     jQuery(this.input.nativeElement).datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss' });
     jQuery(this.input.nativeElement).on('dp.change', (e) => {
-      let date: string = e.date ? e.date.format('YYYY-MM-DD HH:mm:ss') : null;
+      const date: string = e.date ? e.date.format('YYYY-MM-DD HH:mm:ss') : null;
       this.value = date;
       this.onChange(date);
       this.onTouched();

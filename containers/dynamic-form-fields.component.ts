@@ -6,7 +6,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
   template: `
     <div class="dynamic-search-form" [formGroup]="form">
       <ng-container *ngFor="let field of getModelKeys()">
-      
+
       <ng-container [ngSwitch]="formModel[field]['type']">
 
         <ng-container *ngSwitchCase="'group'">
@@ -53,13 +53,13 @@ export class DynamicFormFieldsComponent implements OnInit {
   public errors: Object = {};
 
   @Input()
-  public visibility: string = 'create';
+  public visibility = 'create';
 
   @Input()
-  public disabled: boolean = false;
+  public disabled = false;
 
   @Input()
-  public debug: boolean = false;
+  public debug = false;
 
   public constructor(private fb: FormBuilder) { }
 
