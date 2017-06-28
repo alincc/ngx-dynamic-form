@@ -7,41 +7,32 @@ import { ControlConfig } from './../models/control-config';
 
 @Component({
   selector: 'input-control',
-  template: `
-    <div
-      *ngIf="conf && group"
-      class="form-group"
-      [formGroup]="group"
-      [class.has-success]="group.get(config.name).valid && group.get(config.name).touched"
-      [class.has-error]="(!group.get(config.name).valid && group.get(config.name).touched) || (errors[config.name])"
-      [ngClass]="wrapperClass">
+  template:
+    `<control-wrapper
+      [config]="config"
+      [group]="group"
+      [errors]="errors"
+      [disabled]="disabled"
+      [formGroup]="group">
 
-      <label
-        class="control-label"
-        [attr.for]="config.name"
-        [ngClass]="[config.labelClass || '']">
-        {{ config.label }}
-      </label>
+      <ng-select
+        class="no-ng-validation-border {{ config.controlClass || '' }}"
+        [multiple]="config.multiple === true ? true : false"
+        [allowClear]="true"
+        [items]="items"
+        [active]="active"
+        [placeholder]="config.placeholder || '---'"
+        [disabled]="disabledState"
+        [attr.id]="config.name"
+        [ngClass]="validationClasses"
+        [attr.name]="config.name"
+        [attr.value]="getValue()"
+        (data)="changed($event)">
+      </ng-select>
 
-      <div [ngClass]="[config.controlWrapperClass || '']">
-        <ng-select
-          class="no-ng-validation-border {{ config.controlClass || '' }}"
-          [multiple]="config.multiple === true ? true : false"
-          [allowClear]="true"
-          [items]="items"
-          [active]="active"
-          [placeholder]="config.placeholder || '---'"
-          [disabled]="disabledState"
-          [attr.id]="config.name"
-          [ngClass]="validationClasses"
-          [attr.name]="config.name"
-          [attr.value]="getValue()"
-          (data)="changed($event)">
-        </ng-select>
-        <span *ngIf="noDataGiven" class="text-danger">No data given...</span>
-      </div>
-    </div>
-        `,
+      <span *ngIf="noDataGiven" class="text-danger">No data given...</span>
+
+    </control-wrapper>`,
   styles: [`
     :host { display: block; }
     :host >>> ng-select { border: none !important; }

@@ -6,36 +6,27 @@ import { ControlConfig } from './../models/control-config';
 
 @Component({
   selector: 'datetime-control',
-  template: `
-    <div
-      class="form-group"
-      [formGroup]="group"
-      [class.has-success]="group.get(config.name).valid && group.get(config.name).touched"
-      [class.has-error]="(!group.get(config.name).valid && group.get(config.name).touched) || (errors[config.name])"
-      [ngClass]="[config.mainWrapperClass || '']">
+  template:
+    `<control-wrapper
+      [config]="config"
+      [group]="group"
+      [errors]="errors"
+      [disabled]="disabled"
+      [formGroup]="group">
 
-      <label
-        class="control-label"
-        [attr.for]="config.name"
-        [ngClass]="[config.labelClass || '']">
-        {{ config.label }}
-      </label>
+      <input
+        datetime
+        class="form-control"
+        type="text"
+        [attr.disabled]="disabled === true ? true : null"
+        [attr.id]="config.name"
+        [attr.placeholder]="config.placeholder"
+        [ngClass]="[config.controlClass || '']"
+        [attr.name]="config.name"
+        [value]="group.get(config.name).value"
+        [formControlName]="config.name">
 
-      <div [ngClass]="[config.controlWrapperClass || '']">
-        <input
-          datetime
-          class="form-control"
-          type="text"
-          [attr.disabled]="disabled === true ? true : null"
-          [attr.id]="config.name"
-          [attr.placeholder]="config.placeholder"
-          [ngClass]="[config.controlClass || '']"
-          [attr.name]="config.name"
-          [value]="group.get(config.name).value"
-          [formControlName]="config.name">
-      </div>
-    </div>
-        `,
+    </control-wrapper>`,
   styleUrls: [
     './datetime-control.component.css'
   ],

@@ -6,21 +6,13 @@ import { ControlConfig } from './../models/control-config';
 
 @Component({
   selector: 'radio-control',
-  template: `
-    <div
-      *ngIf="conf && group"
-      class="form-group"
-      [formGroup]="group"
-      [class.has-success]="group.get(config.name).valid && group.get(config.name).touched"
-      [class.has-error]="(!group.get(config.name).valid && group.get(config.name).touched) || (errors[config.name])"
-      [ngClass]="wrapperClass">
-
-      <label
-        class="control-label"
-        [attr.for]="config.name"
-        [ngClass]="[config.labelClass || '']">
-        {{ config.label }}
-      </label>
+  template:
+    `<control-wrapper
+      [config]="config"
+      [group]="group"
+      [errors]="errors"
+      [disabled]="disabled"
+      [formGroup]="group">
 
       <div *ngFor="let option of config.options" class="radio">
         <label>
@@ -35,8 +27,7 @@ import { ControlConfig } from './../models/control-config';
         </label>
       </div>
 
-    </div>
-        `,
+    </control-wrapper>`,
   styles: [`:host { display: block; }`]
 })
 export class RadioControlComponent implements Control, OnInit {

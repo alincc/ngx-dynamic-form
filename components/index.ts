@@ -24,7 +24,6 @@ export const Controls = {
   'text': InputControlComponent,
   'email': InputControlComponent,
   'password': InputControlComponent,
-  'textarea': TextAreaControlComponent,
   'number': InputControlComponent,
   'date': InputControlComponent,
   'datetime-local': DatetimeControlComponent,
@@ -33,8 +32,9 @@ export const Controls = {
   'time': InputControlComponent,
   'checkbox-array': CheckboxArrayControlComponent,
   'radio': RadioControlComponent,
+  'checkbox': CheckboxControlComponent,
   'select': SelectControlComponent,
-  'checkbox': CheckboxControlComponent
+  'textarea': TextAreaControlComponent,
 };
 
 export const Groups = {
