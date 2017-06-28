@@ -19,7 +19,7 @@ export interface ControlConfig {
   labelClass?: string;
   controlWrapperClass?: string;
   controlClass?: string;
-  break?: boolean;
+  clearfix?: boolean;
   visibility?: any;
   // this should be removed when the FormModelParser have the refactor for the search stuff
   controls?: any;

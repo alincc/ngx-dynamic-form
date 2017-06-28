@@ -61,20 +61,20 @@ fdescribe('DynamicFormFieldsComponent', () => {
 
   it('should render form fields with given object', inject([FormBuilder], (fb: FormBuilder) => {
     let formModel: ControlConfig[] = [
-      { name: 'email', label: 'Email', type: 'email', visibility: { create: true } }
+      { name: 'email', label: 'Email', type: 'email', clearfix: true, visibility: { create: true } }
     ];
-    let reactiveForm: FormGroup = fb.group({
-      email: ['']
-    });
+    let reactiveForm: FormGroup = fb.group({ email: [''] });
 
     component.formModel = formModel;
     component.form = reactiveForm;
+
     fixture.detectChanges();
 
     let html = fixture.nativeElement;
 
-    // should render one input and one label
+    // should render one input, one label and a div with clearfix class
     expect(html.querySelector('input[name=email]')).toBeTruthy();
     expect(html.querySelector('label[for=email]')).toBeTruthy();
+    expect(html.querySelector('div.clearfix')).toBeTruthy();
   }));
 });

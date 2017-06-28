@@ -31,7 +31,7 @@ import { ControlConfig } from "app/dynamic-form/models/control-config";
             [disabled]="disabled"></ng-container>
         </ng-container>
 
-        <div *ngIf="field.break && field.visibility[visibility]" class="clearfix"></div>
+        <div *ngIf="field.clearfix && field.visibility[visibility]" class="clearfix"></div>
 
       </ng-container>
 
