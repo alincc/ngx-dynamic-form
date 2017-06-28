@@ -28,7 +28,7 @@ import { ControlConfig } from './../models/control-config';
             <input
                 type="checkbox"
                 [attr.name]="config.name"
-                [checked]="group.get(config.name).value.indexOf(option.value) >= 0"
+                [checked]="group.get(config.name).value && group.get(config.name).value.indexOf(option.value) >= 0"
                 [attr.disabled]="disabled === true ? true : null"
                 [value]="option.value"
                 (click)="toggleArrayFieldValue(config.name, $event.target.value)">
