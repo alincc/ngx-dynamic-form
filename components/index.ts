@@ -6,8 +6,10 @@ import { CheckboxControlComponent } from './checkbox-control.component';
 import { RadioControlComponent } from './radio-control.component';
 import { DatetimeControlComponent } from './datetime-control.component';
 import { SelectControlComponent } from './select-control.component';
+import { ControlWrapperComponent } from "app/dynamic-form/components/control-wrapper.component";
 
 export const COMPONENTS = [
+  ControlWrapperComponent,
   InputControlComponent,
   TextAreaControlComponent,
   GroupBasicComponent,
@@ -15,7 +17,7 @@ export const COMPONENTS = [
   RadioControlComponent,
   DatetimeControlComponent,
   SelectControlComponent,
-  CheckboxControlComponent
+  CheckboxControlComponent,
 ];
 
 export const Controls = {
