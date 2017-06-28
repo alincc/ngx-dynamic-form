@@ -73,8 +73,8 @@ fdescribe('DynamicFormFieldsComponent', () => {
     let html = fixture.nativeElement;
 
     // should render one input, one label and a div with clearfix class
-    expect(html.querySelector('input[name=email]')).toBeTruthy();
-    expect(html.querySelector('label[for=email]')).toBeTruthy();
-    expect(html.querySelector('div.clearfix')).toBeTruthy();
+    expect(html.querySelector('input[name=email]')).toBeTruthy('input exists');
+    expect(html.querySelector('label[for=email]')).toBeTruthy('label exists');
+    expect(html.querySelector('div.clearfix')).toBeTruthy('div.clearfix exists');
   }));
 });

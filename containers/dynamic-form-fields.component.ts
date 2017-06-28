@@ -5,7 +5,7 @@ import { ControlConfig } from "app/dynamic-form/models/control-config";
 @Component({
   selector: 'dynamic-form-fields',
   template: `
-    <div class="dynamic-search-form" [formGroup]="form">
+    <div>
       <ng-container *ngFor="let field of formModel">
 
       <ng-container [ngSwitch]="field.type">
