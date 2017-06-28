@@ -4,8 +4,8 @@ import { ControlConfig } from "app/dynamic-form/models/control-config";
 
 @Component({
   selector: 'dynamic-form-fields',
-  template: `
-    <div>
+  template: 
+    `<div>
       <ng-container *ngFor="let field of formModel">
 
         <ng-container
@@ -20,8 +20,7 @@ import { ControlConfig } from "app/dynamic-form/models/control-config";
         <div *ngIf="field.clearfix && field.visibility[visibility]" class="clearfix"></div>
 
       </ng-container>
-    </div>
-        `,
+    </div>`,
   styles: [`:host { display: block; } .clearfix { border-bottom: 1px dashed #d3d3d3; margin-bottom: 15px; }`],
 })
 export class DynamicFormFieldsComponent implements OnInit {
