@@ -1,36 +1,37 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { ControlConfig } from "app/dynamic-form/models/control-config";
 
 @Component({
   selector: 'dynamic-form-fields',
   template: `
     <div class="dynamic-search-form" [formGroup]="form">
-      <ng-container *ngFor="let field of getModelKeys()">
+      <ng-container *ngFor="let field of formModel">
 
-      <ng-container [ngSwitch]="formModel[field]['type']">
+      <ng-container [ngSwitch]="field.type">
 
         <ng-container *ngSwitchCase="'group'">
           <ng-container
-            *ngIf="formModel[field]['visibility'][visibility]"
+            *ngIf="field.visibility[visibility]"
             dynamicGroup
             [group]="form.get(field)"
-            [config]="formModel[field]"
+            [config]="field"
             [errors]="errors"
             [disabled]="disabled"></ng-container>
         </ng-container>
 
         <ng-container *ngSwitchDefault>
           <ng-container
-            *ngIf="formModel[field]['visibility'][visibility]"
+            *ngIf="field.visibility[visibility]"
             dynamicControl
             [group]="form"
-            [config]="formModel[field]"
+            [config]="field"
             [errors]="errors"
             [data]="formData"
             [disabled]="disabled"></ng-container>
         </ng-container>
 
-        <div *ngIf="formModel[field]['break'] && formModel[field]['visibility'][visibility]" class="clearfix"></div>
+        <div *ngIf="field.break && field.visibility[visibility]" class="clearfix"></div>
 
       </ng-container>
 
@@ -44,7 +45,7 @@ export class DynamicFormFieldsComponent implements OnInit {
   public form: FormGroup;
 
   @Input()
-  public formModel: any;
+  public formModel: ControlConfig[];
 
   @Input()
   public formData: any;
@@ -61,11 +62,7 @@ export class DynamicFormFieldsComponent implements OnInit {
   @Input()
   public debug = false;
 
-  public constructor(private fb: FormBuilder) { }
+  public constructor() { }
 
   public ngOnInit() { }
-
-  public getModelKeys() {
-    return Object.keys(this.formModel ? this.formModel : {});
-  }
 }
