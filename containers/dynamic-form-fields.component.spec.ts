@@ -59,7 +59,7 @@ fdescribe('DynamicFormFieldsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render form fields with given object', inject([FormBuilder], (fb: FormBuilder) => {
+  it('should render certain elements', inject([FormBuilder], (fb: FormBuilder) => {
     let formModel: ControlConfig[] = [
       { name: 'email', label: 'Email', type: 'email', clearfix: true, visibility: { create: true } }
     ];
