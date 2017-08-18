@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Control } from "app/dynamic-form/models/control";
-import { ControlConfig } from "app/dynamic-form/models/control-config";
-import { FormGroup } from "@angular/forms";
+import { Control } from 'app/dynamic-form/models/control';
+import { ControlConfig } from 'app/dynamic-form/models/control-config';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'control-wrapper',
-  template: 
+  template:
     `<div
       class="form-group"
       [class.has-success]="group.get(config.name).valid && group.get(config.name).touched"
@@ -22,7 +22,7 @@ import { FormGroup } from "@angular/forms";
       <div [ngClass]="[config.controlWrapperClass || '']">
 
         <ng-content></ng-content>
-        
+
       </div>
     </div>`
 })
@@ -37,7 +37,7 @@ export class ControlWrapperComponent implements Control, OnInit {
   public errors: any;
 
   @Input()
-  public disabled: boolean = true;
+  public disabled = true;
 
   constructor() { }
 

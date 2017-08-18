@@ -13,7 +13,7 @@ import { ControlConfig } from './../models/control-config';
       [errors]="errors"
       [disabled]="disabled"
       [formGroup]="group">
-      
+
       <input
         class="form-control"
         [attr.type]="config.type"

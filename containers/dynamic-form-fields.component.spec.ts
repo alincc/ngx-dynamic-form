@@ -1,16 +1,16 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { NgModule } from "@angular/core";
-import { ReactiveFormsModule, FormBuilder, FormGroup } from "@angular/forms";
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectModule } from 'ng2-select';
 
 import { DynamicFormFieldsComponent } from './dynamic-form-fields.component';
 import { COMPONENTS } from './../components/';
 import { DIRECTIVES } from './../directives/';
-import { ControlConfig } from "app/dynamic-form/models/control-config";
-import { FormModelParserService } from "app/dynamic-form/services/form-model-parser.service";
-import { TranslateModule } from "@ngx-translate/core";
-import { CommonModule } from "@angular/common";
+import { ControlConfig } from 'app/dynamic-form/models/control-config';
+import { FormModelParserService } from 'app/dynamic-form/services/form-model-parser.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
@@ -19,9 +19,9 @@ import { CommonModule } from "@angular/common";
     TranslateModule.forRoot(),
     SelectModule,
   ],
-  declarations: [...COMPONENTS, ...DIRECTIVES,],
-  entryComponents: [...COMPONENTS,],
-  exports: [...COMPONENTS, ...DIRECTIVES,]
+  declarations: [...COMPONENTS, ...DIRECTIVES, ],
+  entryComponents: [...COMPONENTS, ],
+  exports: [...COMPONENTS, ...DIRECTIVES, ]
 })
 class TestModule { }
 
@@ -60,7 +60,7 @@ fdescribe('DynamicFormFieldsComponent', () => {
   });
 
   it('should render supported form controls', inject([FormBuilder], (fb: FormBuilder) => {
-    let formModel: ControlConfig[] = [
+    const formModel: ControlConfig[] = [
       { name: 'name', label: 'Name', type: 'text', visibility: { create: true } },
       { name: 'email', label: 'Email', type: 'email', clearfix: true, visibility: { create: true } },
       { name: 'password', label: 'Password', type: 'password', visibility: { create: true } },
@@ -93,7 +93,7 @@ fdescribe('DynamicFormFieldsComponent', () => {
       { name: 'terms_agree', label: 'Doy you agree the terms', type: 'checkbox', visibility: { create: true } },
 
     ];
-    let reactiveForm: FormGroup = fb.group({
+    const reactiveForm: FormGroup = fb.group({
       name: [],
       email: [],
       password: [],
@@ -115,11 +115,11 @@ fdescribe('DynamicFormFieldsComponent', () => {
 
     fixture.detectChanges();
 
-    let html = fixture.nativeElement;
+    const html = fixture.nativeElement;
 
     // should render one input, one label and a div with clearfix class
     expect(html.querySelectorAll('.control-label').length).toBe(formModel.length, 'all labels exists');
-    
+
     expect(html.querySelector('input[type=email]')).toBeTruthy('email input exists');
     expect(html.querySelector('input[type=text]')).toBeTruthy('text input exists');
     expect(html.querySelector('input[type=password]')).toBeTruthy('password input exists');

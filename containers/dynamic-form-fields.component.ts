@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { ControlConfig } from "app/dynamic-form/models/control-config";
+import { ControlConfig } from 'app/dynamic-form/models/control-config';
 
 @Component({
   selector: 'dynamic-form-fields',
-  template: 
+  template:
     `<div>
+      <pre>{{ formModel | json }}</pre>
+
       <ng-container *ngFor="let field of formModel">
 
         <ng-container

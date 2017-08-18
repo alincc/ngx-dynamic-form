@@ -13,7 +13,7 @@ import { ControlConfig } from './../models/control-config';
       [errors]="errors"
       [disabled]="disabled"
       [formGroup]="group">
-  
+
       <textarea
         class="form-control"
         [attr.disabled]="disabled === true ? true : null"
