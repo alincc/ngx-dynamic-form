@@ -31,13 +31,17 @@ export class FormModelParserService {
    * @param model The model retreived from the API or any where
    * @param langNamespace The translations fields namespace
    */
-  public parse(model: Object, langNamespace: string = ''): Object {
-    const parsedModel = {};
+  public parse(model: any, langNamespace: string = ''): Object {
+    // const parsedModel = {};
+    const parsedModel = [];
     let option: { id: string | number, text: string };
     let options: { id: string | number, text: string }[] = [];
 
     // loop over the model fields
     _.forOwn(model, (controlOptions: ControlConfig, controlName: string) => {
+      // model.forEach((controlOptions: ControlConfig) => {
+      // const controlName = controlOptions.name;
+
       // don't parse the form model options
       if (controlName == this.optionsKey) return false;
 
@@ -65,7 +69,8 @@ export class FormModelParserService {
         field.options = options;
       }
 
-      parsedModel[controlName] = field;
+      // parsedModel[controlName] = field;
+      parsedModel.push(field);
 
       // the control validation rules
       const validationRules: string[] = _.get(controlOptions, 'validation', []);
@@ -74,17 +79,102 @@ export class FormModelParserService {
       if (_.includes(validationRules, 'confirmed')) {
         // get filed validation rules without the confirmed rule
         const cleanedValidationRules = _.filter(controlOptions['validation'], (rule) => {
-          return rule != 'confirmed';
+          return rule !== 'confirmed';
         });
 
         // create new confirmation field config based on the current field options
-        const confirmFieldOptions = { [controlName + '_confirmation']: Object.assign({}, controlOptions, { validation: cleanedValidationRules }) };
+        const confirmFieldOptions = {
+          [controlName + '_confirmation']: Object.assign(
+            {},
+            controlOptions,
+            { validation: cleanedValidationRules }
+        )};
+
         const confirmFieldParsed = this.parse(
           confirmFieldOptions,
           langNamespace
         );
 
         Object.assign(parsedModel, confirmFieldParsed);
+        // parsedModel.push(confirmFieldParsed);
+      }
+    });
+
+    return parsedModel;
+  }
+
+  public parseFromArray(model: any[], langNamespace: string = ''): Object {
+    // const parsedModel = {};
+    const parsedModel = [];
+    let option: { id: string | number, text: string };
+    let options: { id: string | number, text: string }[] = [];
+
+    // loop over the model fields
+    // _.forOwn(model, (controlOptions: ControlConfig, controlName: string) => {
+    model.forEach((controlOptions: ControlConfig) => {
+      const controlName = controlOptions.name;
+
+      // don't parse the form model options
+      if (controlName == this.optionsKey) return false;
+
+      const field: ControlConfig = Object.assign({}, controlOptions);
+
+      // get control labe translation
+      this.translate.get(langNamespace + controlName)
+        .subscribe((res: string) => field.label = res);
+
+      // get translated options
+      if (_.has(controlOptions, 'options')) {
+        options = [];
+        _.forEach(controlOptions.options, (optionValue: string) => {
+          option = { id: '', text: '' };
+          const transKey: string = langNamespace + controlName + '-options.' + optionValue;
+          option.id = optionValue;
+
+          // get option translation
+          this.translate.get(transKey)
+            .subscribe((res: string) => option.text = (transKey !== res) ? res : optionValue);
+
+          options.push(option);
+        });
+
+        field.options = options;
+      }
+
+      // parsedModel[controlName] = field;
+      parsedModel.push(field);
+
+      // the control validation rules
+      const validationRules: string[] = _.get(controlOptions, 'validation', []);
+
+      // the field requires confirmation?
+      if (_.includes(validationRules, 'confirmed')) {
+        // get filed validation rules without the confirmed rule
+        const cleanedValidationRules = _.filter(controlOptions['validation'], (rule) => {
+          return rule !== 'confirmed';
+        });
+
+        // create new confirmation field config based on the current field options
+        /*const confirmFieldOptions = {
+          [controlName + '_confirmation']: Object.assign(
+            {},
+            controlOptions,
+            { validation: cleanedValidationRules }
+        )};*/
+
+        const confirmFieldOptions = Object.assign(
+            {},
+            controlOptions,
+            { validation: cleanedValidationRules }
+        );
+
+        const confirmFieldParsed = this.parse(
+          [confirmFieldOptions],
+          langNamespace
+        );
+
+        // Object.assign(parsedModel, confirmFieldParsed);
+        parsedModel.push(confirmFieldParsed);
       }
     });
 
@@ -233,11 +323,73 @@ export class FormModelParserService {
    *
    * @param parsedModel The parsed Form Model
    */
-  public toFormGroup(parsedModel: Object, formType: string = '*'): FormGroup {
+  public toFormGroup(parsedModel: any, formType: string = '*'): FormGroup {
     const group = {};
     let validation = [];
 
     _.forOwn(parsedModel, (options: ControlConfig, field) => {
+    /*parsedModel.forEach(options => {
+      const field = options.name;*/
+
+      // is there a formType specified? if yes, check if the field should be on that specified form
+      if (formType !== '*') {
+        if (_.get(options.visibility, formType, false) === false) {
+          return;
+        }
+      }
+
+      // setup validation rules
+      validation = [];
+      if (_.has(options, 'validation')) {
+        _.each(options['validation'], (validationRule) => {
+          switch (validationRule) {
+            case 'required':
+              validation.push(Validators.required);
+            break;
+
+            case 'email':
+              validation.push(Validators.email);
+            break;
+          }
+        });
+      }
+
+      // setup the reactiveForm based on the option type
+      switch (options.type) {
+        case 'group':
+          group[field] = this.toFormGroup(options.controls);
+          break;
+
+        // TODO: setup for array groups
+        case 'checkbox-array':
+          group[field] = [[], validation];
+          break;
+
+        case 'select':
+          if (options.multiple && options.multiple === true) {
+            group[field] = [[], validation];
+          } else {
+            group[field] = [_.get(options, 'value', null), validation];
+          }
+        break;
+
+        default:
+          group[field] = [_.get(options, 'value', null), validation];
+          break;
+      }
+    });
+
+    return this.formBuilder.group(group);
+  }
+
+
+  public toFormGroupFromArray(parsedModel: any[], formType: string = '*'): FormGroup {
+    const group = {};
+    let validation = [];
+
+    //_.forOwn(parsedModel, (options: ControlConfig, field) => {
+    parsedModel.forEach(options => {
+      const field = options.name;
 
       // is there a formType specified? if yes, check if the field should be on that specified form
       if (formType !== '*') {
