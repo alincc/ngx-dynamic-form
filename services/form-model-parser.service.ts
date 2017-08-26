@@ -31,79 +31,79 @@ export class FormModelParserService {
    * @param model The model retreived from the API or any where
    * @param langNamespace The translations fields namespace
    */
-  public parse(model: any, langNamespace: string = ''): Object {
-    // const parsedModel = {};
-    const parsedModel = [];
-    let option: { id: string | number, text: string };
-    let options: { id: string | number, text: string }[] = [];
+  // public parse(model: any, langNamespace: string = ''): Object {
+  //   // const parsedModel = {};
+  //   const parsedModel = [];
+  //   let option: { id: string | number, text: string };
+  //   let options: { id: string | number, text: string }[] = [];
 
-    // loop over the model fields
-    _.forOwn(model, (controlOptions: ControlConfig, controlName: string) => {
-      // model.forEach((controlOptions: ControlConfig) => {
-      // const controlName = controlOptions.name;
+  //   // loop over the model fields
+  //   _.forOwn(model, (controlOptions: ControlConfig, controlName: string) => {
+  //     // model.forEach((controlOptions: ControlConfig) => {
+  //     // const controlName = controlOptions.name;
 
-      // don't parse the form model options
-      if (controlName == this.optionsKey) return false;
+  //     // don't parse the form model options
+  //     if (controlName == this.optionsKey) return false;
 
-      const field: ControlConfig = Object.assign({}, controlOptions);
+  //     const field: ControlConfig = Object.assign({}, controlOptions);
 
-      // get control labe translation
-      this.translate.get(langNamespace + controlName)
-        .subscribe((res: string) => field.label = res);
+  //     // get control labe translation
+  //     this.translate.get(langNamespace + controlName)
+  //       .subscribe((res: string) => field.label = res);
 
-      // get translated options
-      if (_.has(controlOptions, 'options')) {
-        options = [];
-        _.forEach(controlOptions.options, (optionValue: string) => {
-          option = { id: '', text: '' };
-          const transKey: string = langNamespace + controlName + '-options.' + optionValue;
-          option.id = optionValue;
+  //     // get translated options
+  //     if (_.has(controlOptions, 'options')) {
+  //       options = [];
+  //       _.forEach(controlOptions.options, (optionValue: string) => {
+  //         option = { id: '', text: '' };
+  //         const transKey: string = langNamespace + controlName + '-options.' + optionValue;
+  //         option.id = optionValue;
 
-          // get option translation
-          this.translate.get(transKey)
-            .subscribe((res: string) => option.text = (transKey !== res) ? res : optionValue);
+  //         // get option translation
+  //         this.translate.get(transKey)
+  //           .subscribe((res: string) => option.text = (transKey !== res) ? res : optionValue);
 
-          options.push(option);
-        });
+  //         options.push(option);
+  //       });
 
-        field.options = options;
-      }
+  //       field.options = options;
+  //     }
 
-      // parsedModel[controlName] = field;
-      parsedModel.push(field);
+  //     // parsedModel[controlName] = field;
+  //     parsedModel.push(field);
 
-      // the control validation rules
-      const validationRules: string[] = _.get(controlOptions, 'validation', []);
+  //     // the control validation rules
+  //     const validationRules: string[] = _.get(controlOptions, 'validation', []);
 
-      // the field requires confirmation?
-      if (_.includes(validationRules, 'confirmed')) {
-        // get filed validation rules without the confirmed rule
-        const cleanedValidationRules = _.filter(controlOptions['validation'], (rule) => {
-          return rule !== 'confirmed';
-        });
+  //     // the field requires confirmation?
+  //     if (_.includes(validationRules, 'confirmed')) {
+  //       // get filed validation rules without the confirmed rule
+  //       const cleanedValidationRules = _.filter(controlOptions['validation'], (rule) => {
+  //         return rule !== 'confirmed';
+  //       });
 
-        // create new confirmation field config based on the current field options
-        const confirmFieldOptions = {
-          [controlName + '_confirmation']: Object.assign(
-            {},
-            controlOptions,
-            { validation: cleanedValidationRules }
-        )};
+  //       // create new confirmation field config based on the current field options
+  //       const confirmFieldOptions = {
+  //         [controlName + '_confirmation']: Object.assign(
+  //           {},
+  //           controlOptions,
+  //           { validation: cleanedValidationRules }
+  //       )};
 
-        const confirmFieldParsed = this.parse(
-          confirmFieldOptions,
-          langNamespace
-        );
+  //       const confirmFieldParsed = this.parse(
+  //         confirmFieldOptions,
+  //         langNamespace
+  //       );
 
-        Object.assign(parsedModel, confirmFieldParsed);
-        // parsedModel.push(confirmFieldParsed);
-      }
-    });
+  //       Object.assign(parsedModel, confirmFieldParsed);
+  //       // parsedModel.push(confirmFieldParsed);
+  //     }
+  //   });
 
-    return parsedModel;
-  }
+  //   return parsedModel;
+  // }
 
-  public parseFromArray(model: any[], langNamespace: string = ''): Object {
+  public parse(model: any[], langNamespace: string = ''): any[] {
     // const parsedModel = {};
     const parsedModel = [];
     let option: { id: string | number, text: string };
@@ -115,7 +115,9 @@ export class FormModelParserService {
       const controlName = controlOptions.name;
 
       // don't parse the form model options
-      if (controlName == this.optionsKey) return false;
+      if (controlName == this.optionsKey) {
+        return false;
+      }
 
       const field: ControlConfig = Object.assign({}, controlOptions);
 
@@ -163,9 +165,9 @@ export class FormModelParserService {
         )};*/
 
         const confirmFieldOptions = Object.assign(
-            {},
-            controlOptions,
-            { validation: cleanedValidationRules }
+          {},
+          controlOptions,
+          { validation: cleanedValidationRules }
         );
 
         const confirmFieldParsed = this.parse(
@@ -181,95 +183,100 @@ export class FormModelParserService {
     return parsedModel;
   }
 
-  public parseToSearch(model: Object, allColumns: Object, translateKey: string) {
-    const searchGroup: Group = {
-      controls: {},
-      type: 'group',
-      visibility: {
-        search: true
-      },
-      _options_: {
-        label: 'Search'
-      }
-    };
-    const optionsGroup: Group = {
-      controls: {},
-      type: 'group',
-      visibility: {
-        search: true
-      },
-      _options_: {
-        label: 'Visible Columns'
-      }
-    };
-    const parsedModel: Object = {};
-    const columnOptions = [];
-    // the object is sealed/frozen, then we make a deep clone to have a unlock one
-    const copyModel: Object = _.cloneDeep(model);
+  /**
+   * TODO: This method needs to be retinked...
+   */
+  public parseToSearch(model: any[], allColumns: Object, translateKey: string) {
+    // const searchGroup: Group = {
+    //   controls: {},
+    //   type: 'group',
+    //   visibility: {
+    //     search: true
+    //   },
+    //   _options_: {
+    //     label: 'Search'
+    //   }
+    // };
+    // const optionsGroup: Group = {
+    //   controls: {},
+    //   type: 'group',
+    //   visibility: {
+    //     search: true
+    //   },
+    //   _options_: {
+    //     label: 'Visible Columns'
+    //   }
+    // };
+    // const parsedModel: Object = {};
+    // const columnOptions = [];
+    // // the object is sealed/frozen, then we make a deep clone to have a unlock one
+    // const copyModel: Object = _.cloneDeep(model);
 
-    // loop over model fields and search which of them can be transformed to groups like:
-    // created_at: {} => created_at: [from: {}, to: {}]
-    // this is to make search by rnages on certain fields based on his type attr
-    _.forOwn(copyModel, (options: any, field: string) => {
-      // don't parse the form model options
-      if (field == this.optionsKey) return false;
+    // // loop over model fields and search which of them can be transformed to groups like:
+    // // created_at: {} => created_at: [from: {}, to: {}]
+    // // this is to make search by rnages on certain fields based on his type attr
+    // _.forOwn(copyModel, (options: any, field: string) => {
+    //   // don't parse the form model options
+    //   if (field == this.optionsKey) {
+    //     return false;
+    //   }
 
-      // remove the required validation rules if any
-      const fieldOptions = this.removeRequiredValidationRule(options);
-      let groupOptions = {};
-      let groupFields = {};
+    //   // remove the required validation rules if any
+    //   const fieldOptions = this.removeRequiredValidationRule(options);
+    //   let groupOptions = {};
+    //   let groupFields = {};
 
-      // check if the current field can be converted to an range field,
-      // like dates or number fields
-      if (_.includes(this.fieldTypesForRanges, options.type)) {
-        groupOptions = this.getGroupOptions(fieldOptions);
-        groupFields = this.getGroupFields(fieldOptions);
+    //   // check if the current field can be converted to an range field,
+    //   // like dates or number fields
+    //   if (_.includes(this.fieldTypesForRanges, options.type)) {
+    //     groupOptions = this.getGroupOptions(fieldOptions);
+    //     groupFields = this.getGroupFields(fieldOptions);
 
-        // add the field to the search group
-        _.set(searchGroup, 'controls.' + field, {
-          type: 'group',
-          visibility: options.visibility,
-          _options_: groupOptions,
-          controls: groupFields,
-        } as Group);
-      } else {
-        _.set(searchGroup, 'controls.' + field, options);
-      }
-    });
+    //     // add the field to the search group
+    //     _.set(searchGroup, 'controls.' + field, {
+    //       type: 'group',
+    //       visibility: options.visibility,
+    //       _options_: groupOptions,
+    //       controls: groupFields,
+    //     } as Group);
+    //   } else {
+    //     _.set(searchGroup, 'controls.' + field, options);
+    //   }
+    // });
 
-    // setup the columns group
-    _.set(optionsGroup, 'controls.filter', {
-      options: this.getColumnsOptions(allColumns, translateKey),
-      type: 'checkbox-array',
-      name: 'filter',
-      label: 'Columnas visibles',
-      visibility: {
-        search: true
-      }
-    });
+    // // setup the columns group
+    // _.set(optionsGroup, 'controls.filter', {
+    //   options: this.getColumnsOptions(allColumns, translateKey),
+    //   type: 'checkbox-array',
+    //   name: 'filter',
+    //   label: 'Columnas visibles',
+    //   visibility: {
+    //     search: true
+    //   }
+    // });
 
-    // setup for trashed columns if deleted_at field exists
-    if (_.has(model, 'deleted_at')) {
+    // // setup for trashed columns if deleted_at field exists
+    // if (_.has(model, 'deleted_at')) {
 
-      const trashedOptions = [
-        { id: 'withTrashed', text: 'Con registros eliminados' },
-        { id: 'onlyTrashed', text: 'Sólo registros eliminados' },
-      ];
+    //   const trashedOptions = [
+    //     { id: 'withTrashed', text: 'Con registros eliminados' },
+    //     { id: 'onlyTrashed', text: 'Sólo registros eliminados' },
+    //   ];
 
-      _.set(optionsGroup, 'controls.trashed', {
-        options: trashedOptions,
-        type: 'radio',
-        name: 'trashed',
-        label: 'Registros eliminados',
-        visibility: {
-          search: true
-        }
-      });
-    }
+    //   _.set(optionsGroup, 'controls.trashed', {
+    //     options: trashedOptions,
+    //     type: 'radio',
+    //     name: 'trashed',
+    //     label: 'Registros eliminados',
+    //     visibility: {
+    //       search: true
+    //     }
+    //   });
+    // }
 
-    // TODO: add setup for rows per page!!!
+    // // TODO: add setup for rows per page!!!
 
-    return { search: searchGroup, options: optionsGroup };
+    return model;
   }
 
   private getColumnsOptions(columns, translationKey) {
@@ -278,7 +285,11 @@ export class FormModelParserService {
     this.translate.get(translationKey + 'fields').subscribe(val => trans = val);
 
     _.forOwn(columns, (column => {
-      if (_.has(trans, column)) columnOptions.push({ value: column, label: _.get(trans, column) });
+
+      if (_.has(trans, column)) {
+        columnOptions.push({ value: column, label: _.get(trans, column) });
+      }
+
     }));
 
     return columnOptions;
@@ -323,71 +334,71 @@ export class FormModelParserService {
    *
    * @param parsedModel The parsed Form Model
    */
-  public toFormGroup(parsedModel: any, formType: string = '*'): FormGroup {
+  // public toFormGroup(parsedModel: any, formType: string = '*'): FormGroup {
+  //   const group = {};
+  //   let validation = [];
+
+  //   _.forOwn(parsedModel, (options: ControlConfig, field) => {
+  //   /*parsedModel.forEach(options => {
+  //     const field = options.name;*/
+
+  //     // is there a formType specified? if yes, check if the field should be on that specified form
+  //     if (formType !== '*') {
+  //       if (_.get(options.visibility, formType, false) === false) {
+  //         return;
+  //       }
+  //     }
+
+  //     // setup validation rules
+  //     validation = [];
+  //     if (_.has(options, 'validation')) {
+  //       _.each(options['validation'], (validationRule) => {
+  //         switch (validationRule) {
+  //           case 'required':
+  //             validation.push(Validators.required);
+  //           break;
+
+  //           case 'email':
+  //             validation.push(Validators.email);
+  //           break;
+  //         }
+  //       });
+  //     }
+
+  //     // setup the reactiveForm based on the option type
+  //     switch (options.type) {
+  //       case 'group':
+  //         group[field] = this.toFormGroup(options.controls);
+  //         break;
+
+  //       // TODO: setup for array groups
+  //       case 'checkbox-array':
+  //         group[field] = [[], validation];
+  //         break;
+
+  //       case 'select':
+  //         if (options.multiple && options.multiple === true) {
+  //           group[field] = [[], validation];
+  //         } else {
+  //           group[field] = [_.get(options, 'value', null), validation];
+  //         }
+  //       break;
+
+  //       default:
+  //         group[field] = [_.get(options, 'value', null), validation];
+  //         break;
+  //     }
+  //   });
+
+  //   return this.formBuilder.group(group);
+  // }
+
+
+  public toFormGroup(parsedModel: any[], formType: string = '*'): FormGroup {
     const group = {};
     let validation = [];
 
-    _.forOwn(parsedModel, (options: ControlConfig, field) => {
-    /*parsedModel.forEach(options => {
-      const field = options.name;*/
-
-      // is there a formType specified? if yes, check if the field should be on that specified form
-      if (formType !== '*') {
-        if (_.get(options.visibility, formType, false) === false) {
-          return;
-        }
-      }
-
-      // setup validation rules
-      validation = [];
-      if (_.has(options, 'validation')) {
-        _.each(options['validation'], (validationRule) => {
-          switch (validationRule) {
-            case 'required':
-              validation.push(Validators.required);
-            break;
-
-            case 'email':
-              validation.push(Validators.email);
-            break;
-          }
-        });
-      }
-
-      // setup the reactiveForm based on the option type
-      switch (options.type) {
-        case 'group':
-          group[field] = this.toFormGroup(options.controls);
-          break;
-
-        // TODO: setup for array groups
-        case 'checkbox-array':
-          group[field] = [[], validation];
-          break;
-
-        case 'select':
-          if (options.multiple && options.multiple === true) {
-            group[field] = [[], validation];
-          } else {
-            group[field] = [_.get(options, 'value', null), validation];
-          }
-        break;
-
-        default:
-          group[field] = [_.get(options, 'value', null), validation];
-          break;
-      }
-    });
-
-    return this.formBuilder.group(group);
-  }
-
-
-  public toFormGroupFromArray(parsedModel: any[], formType: string = '*'): FormGroup {
-    const group = {};
-    let validation = [];
-
-    //_.forOwn(parsedModel, (options: ControlConfig, field) => {
+    // _.forOwn(parsedModel, (options: ControlConfig, field) => {
     parsedModel.forEach(options => {
       const field = options.name;
 
@@ -405,11 +416,11 @@ export class FormModelParserService {
           switch (validationRule) {
             case 'required':
               validation.push(Validators.required);
-            break;
+              break;
 
             case 'email':
               validation.push(Validators.email);
-            break;
+              break;
           }
         });
       }
@@ -431,7 +442,7 @@ export class FormModelParserService {
           } else {
             group[field] = [_.get(options, 'value', null), validation];
           }
-        break;
+          break;
 
         default:
           group[field] = [_.get(options, 'value', null), validation];
